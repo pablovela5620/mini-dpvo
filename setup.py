@@ -32,7 +32,7 @@ setup(
             "lietorch_backends",
             include_dirs=[
                 osp.join(ROOT, "mini_dpvo/lietorch/include"),
-                osp.join(ROOT, "thirdparty/eigen-3.4.0"),
+                osp.join(ROOT, ".pixi/envs/default/include/eigen3"),
             ],
             sources=[
                 "mini_dpvo/lietorch/src/lietorch.cpp",
