@@ -178,7 +178,7 @@ with gr.Blocks(
                     minimum=1,
                     maximum=5,
                     step=1,
-                    value=1,
+                    value=5,
                 )
                 skip = gr.Number(
                     label="Skip: How many frames to skip at the beginning",
@@ -186,6 +186,7 @@ with gr.Blocks(
                     precision=0,
                 )
                 config_type = gr.Dropdown(
+                    label="Config Type: Choose between accurate and fast",
                     value="fast",
                     choices=["accurate", "fast"],
                     max_choices=1,
