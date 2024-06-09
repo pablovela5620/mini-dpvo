@@ -156,6 +156,7 @@ class DPVO:
         poses = lietorch.stack(poses, dim=0)
         poses = poses.inv().data.cpu().numpy()
         tstamps = np.array(self.tlist, dtype=np.float64)
+        print("Done!")
 
         return poses, tstamps
 
