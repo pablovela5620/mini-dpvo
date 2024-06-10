@@ -33,7 +33,7 @@ look in the `pixi.toml` file to see exactly what each command does under `tasks`
 
 
 ## Acknowledgements
-Original Code and paper form [DPVO](https://github.com/princeton-vl/DPVO)
+Original Code and paper from [DPVO](https://github.com/princeton-vl/DPVO)
 ```
 @article{teed2023deep,
   title={Deep Patch Visual Odometry},
