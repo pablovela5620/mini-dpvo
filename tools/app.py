@@ -22,8 +22,9 @@ from multiprocessing import Process, Queue
 from mini_dpvo.dpvo import DPVO
 from jaxtyping import UInt8, Float64, Float32
 from mini_dust3r.model import AsymmetricCroCo3DStereo
-
 from tqdm import tqdm
+import tyro
+from dataclasses import dataclass
 
 if gr.NO_RELOAD:
     NETWORK_PATH = "checkpoints/dpvo.pth"
@@ -37,6 +38,11 @@ if gr.NO_RELOAD:
     MODEL = AsymmetricCroCo3DStereo.from_pretrained(
         "naver/DUSt3R_ViTLarge_BaseDecoder_512_dpt"
     ).to(DEVICE)
+
+
+@dataclass
+class GradioDPVOConfig:
+    share: bool = False
 
 
 @rr.thread_local_stream("mini_dpvo")
@@ -139,95 +145,99 @@ def on_file_upload(video_file_path: str) -> None:
     return video_info
 
 
-with gr.Blocks(
-    css=""".gradio-container {margin: 0 !important; min-width: 100%};""",
-    title="Mini-DPVO Demo",
-) as demo:
-    # scene state is save so that you can change conf_thr, cam_size... without rerunning the inference
-    gr.HTML('<h2 style="text-align: center;">Mini-DPVO Demo</h2>')
-    gr.HTML(
-        '<p style="text-align: center;">Unofficial DPVO demo using the mini-dpvo. Learn more about mini-dpvo <a href="https://github.com/pablovela5620/mini-dpvo">here</a>.</p>'
-    )
-    with gr.Column():
-        with gr.Row():
-            video_input = gr.File(
-                height=100,
-                file_count="single",
-                file_types=[".mp4", ".mov", ".MOV", ".webm"],
-                label="Video File",
-            )
-            with gr.Column():
-                video_info = gr.Markdown(
-                    value="""
-                **Video Info:**
-                """
-                )
-                time_taken = gr.Number(
-                    label="Time Taken (s)", precision=2, interactive=False
-                )
-        with gr.Accordion(label="Advanced", open=False):
+def main(gradio_config: GradioDPVOConfig):
+    with gr.Blocks(
+        css=""".gradio-container {margin: 0 !important; min-width: 100%};""",
+        title="Mini-DPVO Demo",
+    ) as demo:
+        # scene state is save so that you can change conf_thr, cam_size... without rerunning the inference
+        gr.HTML('<h2 style="text-align: center;">Mini-DPVO Demo</h2>')
+        gr.HTML(
+            '<p style="text-align: center;">Unofficial DPVO demo using the mini-dpvo. Learn more about mini-dpvo <a href="https://github.com/pablovela5620/mini-dpvo">here</a>.</p>'
+        )
+        with gr.Column():
             with gr.Row():
-                jpg_quality = gr.Radio(
-                    label="JPEG Quality %: Lower quality means faster streaming",
-                    choices=[10, 50, 90],
-                    value=90,
-                    type="value",
+                video_input = gr.File(
+                    height=100,
+                    file_count="single",
+                    file_types=[".mp4", ".mov", ".MOV", ".webm"],
+                    label="Video File",
                 )
-                stride = gr.Slider(
-                    label="Stride: How many frames to sample between each prediction",
-                    minimum=1,
-                    maximum=5,
-                    step=1,
-                    value=5,
-                )
-                skip = gr.Number(
-                    label="Skip: How many frames to skip at the beginning",
-                    value=0,
-                    precision=0,
-                )
-                config_type = gr.Dropdown(
-                    label="Config Type: Choose between accurate and fast",
-                    value="fast",
-                    choices=["accurate", "fast"],
-                    max_choices=1,
-                )
-        with gr.Row():
-            start_btn = gr.Button("Run")
-            stop_btn = gr.Button("Stop")
-        rr_viewer = Rerun(height=500, streaming=True)
+                with gr.Column():
+                    video_info = gr.Markdown(
+                        value="""
+                    **Video Info:**
+                    """
+                    )
+                    time_taken = gr.Number(
+                        label="Time Taken (s)", precision=2, interactive=False
+                    )
+            with gr.Accordion(label="Advanced", open=False):
+                with gr.Row():
+                    jpg_quality = gr.Radio(
+                        label="JPEG Quality %: Lower quality means faster streaming",
+                        choices=[10, 50, 90],
+                        value=90,
+                        type="value",
+                    )
+                    stride = gr.Slider(
+                        label="Stride: How many frames to sample between each prediction",
+                        minimum=1,
+                        maximum=5,
+                        step=1,
+                        value=5,
+                    )
+                    skip = gr.Number(
+                        label="Skip: How many frames to skip at the beginning",
+                        value=0,
+                        precision=0,
+                    )
+                    config_type = gr.Dropdown(
+                        label="Config Type: Choose between accurate and fast",
+                        value="fast",
+                        choices=["accurate", "fast"],
+                        max_choices=1,
+                    )
+            with gr.Row():
+                start_btn = gr.Button("Run")
+                stop_btn = gr.Button("Stop")
+            rr_viewer = Rerun(height=500, streaming=True)
 
-        # Example videos
-        base_example_params = [50, 4, 0, "fast"]
-        example_dpvo_dir = Path("data/movies")
-        example_iphone_dir = Path("data/iphone")
-        example_video_paths = sorted(example_iphone_dir.glob("*.MOV")) + sorted(
-            example_dpvo_dir.glob("*.MOV")
-        )
-        example_video_paths = [str(path) for path in example_video_paths]
+            # Example videos
+            base_example_params = [50, 4, 0, "fast"]
+            example_dpvo_dir = Path("data/movies")
+            example_iphone_dir = Path("data/iphone")
+            example_video_paths = sorted(example_iphone_dir.glob("*.MOV")) + sorted(
+                example_dpvo_dir.glob("*.MOV")
+            )
+            example_video_paths = [str(path) for path in example_video_paths]
 
-        examples = gr.Examples(
-            examples=[[path, *base_example_params] for path in example_video_paths],
-            inputs=[video_input, jpg_quality, stride, skip, config_type],
-            outputs=[rr_viewer],
-            fn=run_dpvo,
-        )
+            examples = gr.Examples(
+                examples=[[path, *base_example_params] for path in example_video_paths],
+                inputs=[video_input, jpg_quality, stride, skip, config_type],
+                outputs=[rr_viewer],
+                fn=run_dpvo,
+            )
 
-        click_event = start_btn.click(
-            fn=run_dpvo,
-            inputs=[video_input, jpg_quality, stride, skip, config_type],
-            outputs=[rr_viewer, time_taken],
-        )
+            click_event = start_btn.click(
+                fn=run_dpvo,
+                inputs=[video_input, jpg_quality, stride, skip, config_type],
+                outputs=[rr_viewer, time_taken],
+            )
 
-        stop_btn.click(
-            fn=None,
-            inputs=[],
-            outputs=[],
-            cancels=[click_event],
-        )
+            stop_btn.click(
+                fn=None,
+                inputs=[],
+                outputs=[],
+                cancels=[click_event],
+            )
 
-        video_input.upload(
-            fn=on_file_upload, inputs=[video_input], outputs=[video_info]
-        )
+            video_input.upload(
+                fn=on_file_upload, inputs=[video_input], outputs=[video_info]
+            )
+
+    demo.launch(share=gradio_config.share)
 
 
-demo.launch(share=False)
+if __name__ == "__main__":
+    main(tyro.cli(GradioDPVOConfig))
