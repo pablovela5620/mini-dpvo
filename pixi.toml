@@ -38,7 +38,7 @@ post-install = {cmd="python -m pip install -e .", depends_on=["download-model", 
 rr-viewer = "rerun --memory-limit 50% --drop-at-latency 500ms"
 
 demo = """
-python tools/demo.py --imagedir data/movies/IMG_0493.MOV --calib data/calib/iphone.txt --config config/fast.yaml
+python tools/demo.py --imagedir data/movies/IMG_0493.MOV --config config/fast.yaml
 """
 app = {cmd="python tools/app.py", depends_on=["post-install"]}
 
