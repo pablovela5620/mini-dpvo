@@ -14,9 +14,13 @@ pixi run post-install
 ```
 
 ## Demo
+Hosted Demos can be found in either lightning studio or huggingface spaces
+
 <a target="_blank" href="https://lightning.ai/pablovelagomez1/studios/mini-dpvo">
   <img src="https://pl-bolts-doc-images.s3.us-east-2.amazonaws.com/app-2/studio-badge.svg" alt="Open In Studio"/>
 </a>
+
+<a href='https://huggingface.co/spaces/pablovela5620/MiniDPVO'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'></a>
 
 
 To run the gradio frontend

@@ -201,7 +201,7 @@ def main(gradio_config: GradioDPVOConfig):
             with gr.Row():
                 start_btn = gr.Button("Run")
                 stop_btn = gr.Button("Stop")
-            rr_viewer = Rerun(height=500, streaming=True)
+            rr_viewer = Rerun(height=600, streaming=True)
 
             # Example videos
             base_example_params = [50, 4, 0, "fast"]
@@ -212,11 +212,12 @@ def main(gradio_config: GradioDPVOConfig):
             )
             example_video_paths = [str(path) for path in example_video_paths]
 
-            examples = gr.Examples(
+            gr.Examples(
                 examples=[[path, *base_example_params] for path in example_video_paths],
                 inputs=[video_input, jpg_quality, stride, skip, config_type],
                 outputs=[rr_viewer],
                 fn=run_dpvo,
+                cache_examples=False,
             )
 
             click_event = start_btn.click(
@@ -236,7 +237,7 @@ def main(gradio_config: GradioDPVOConfig):
                 fn=on_file_upload, inputs=[video_input], outputs=[video_info]
             )
 
-    demo.launch(share=gradio_config.share)
+    demo.launch()
 
 
 if __name__ == "__main__":
