@@ -36,7 +36,7 @@ if gr.NO_RELOAD:
         else "cpu"
     )
     MODEL = AsymmetricCroCo3DStereo.from_pretrained(
-        "naver/DUSt3R_ViTLarge_BaseDecoder_512_dpt"
+        "nielsr/DUSt3R_ViTLarge_BaseDecoder_512_dpt"
     ).to(DEVICE)
 
 
