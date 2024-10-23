@@ -474,7 +474,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/a7/45/a0d1b0474f280b5191ce6be739533514c9fe4a0315aed75ed58741d536c7/trimesh-4.5.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/4b/84/997bbf7c2bf2dc3f09565c6d0b4959fefe5355c18c4096cfd26d83e0785b/werkzeug-3.0.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/66/c9/d4b03b2490107f13ebd68fe9496d41ae41a7de6275ead56d0d4621b11ffd/yapf-0.40.2-py3-none-any.whl
-      - pypi: dist/mini_dpvo-0.1.1-cp311-cp311-linux_x86_64.whl
+      - pypi: .
   spaces:
     channels:
     - url: https://conda.anaconda.org/nvidia/label/cuda-11.8.0/
@@ -951,7 +951,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/a7/45/a0d1b0474f280b5191ce6be739533514c9fe4a0315aed75ed58741d536c7/trimesh-4.5.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/4b/84/997bbf7c2bf2dc3f09565c6d0b4959fefe5355c18c4096cfd26d83e0785b/werkzeug-3.0.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/66/c9/d4b03b2490107f13ebd68fe9496d41ae41a7de6275ead56d0d4621b11ffd/yapf-0.40.2-py3-none-any.whl
-      - pypi: dist/mini_dpvo-0.1.1-cp311-cp311-linux_x86_64.whl
+      - pypi: .
 packages:
 - kind: conda
   name: _libgcc_mutex
@@ -6101,11 +6101,14 @@ packages:
 - kind: pypi
   name: mini-dpvo
   version: 0.1.1
-  path: dist/mini_dpvo-0.1.1-cp311-cp311-linux_x86_64.whl
+  path: .
+  sha256: ad6ca7e206f0330785a945c88efe1458d30eb37a45c24a82dcfc55a007923688
   requires_dist:
-  - build<2,>=1.2.2.post1
-  - mmcv-lite<3,>=2.2.0
+  - build>=1.2.2.post1,<2
+  - mmcv-lite>=2.2.0,<3
+  - hf-transfer>=0.1.8,<0.2
   requires_python: '>=3.10.0'
+  editable: true
 - kind: pypi
   name: mini-dust3r
   version: 0.1.1

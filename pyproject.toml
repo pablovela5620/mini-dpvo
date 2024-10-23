@@ -68,7 +68,7 @@ post-install = { cmd = "pwd", depends_on = [
 
 _build-wheel = "python -m build --no-isolation"
 upload-hf = { cmd = "python tools/upload_to_hf.py", depends_on = [
-    # "_build-wheel",
+    "_build-wheel",
 ] }
 
 demo = """
@@ -117,8 +117,8 @@ gradio = "<5"
 rerun-sdk = ">=0.19.0,<0.20"
 
 [tool.pixi.pypi-dependencies]
-# mini_dpvo = { path = ".", editable = true }
-mini_dpvo = { path = "dist/mini_dpvo-0.1.1-cp311-cp311-linux_x86_64.whl" }
+mini_dpvo = { path = ".", editable = true }
+# mini_dpvo = { path = "dist/mini_dpvo-0.1.1-cp311-cp311-linux_x86_64.whl" }
 opencv-python = ">=4.9.0.80"
 evo = ">=1.28.0"
 gradio-rerun = ">=0.0.3"
