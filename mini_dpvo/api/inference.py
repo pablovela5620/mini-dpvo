@@ -25,19 +25,19 @@ from mini_dust3r.model import AsymmetricCroCo3DStereo
 
 @dataclass
 class DPVOPrediction:
-    final_poses: Float32[torch.Tensor, "num_keyframes 7"]  # noqa: F722
+    final_poses: Float32[torch.Tensor, "num_keyframes 7"]
     tstamps: Float64[torch.Tensor, "num_keyframes"]  # noqa: F821
-    final_points: Float32[torch.Tensor, "buffer_size*num_patches 3"]  # noqa: F722
-    final_colors: UInt8[torch.Tensor, "buffer_size num_patches 3"]  # noqa: F722
+    final_points: Float32[torch.Tensor, "buffer_size*num_patches 3"]
+    final_colors: UInt8[torch.Tensor, "buffer_size num_patches 3"]
 
 
 def log_trajectory(
     parent_log_path: Path,
-    poses: Float32[torch.Tensor, "buffer_size 7"],  # noqa: F722
-    points: Float32[torch.Tensor, "buffer_size*num_patches 3"],  # noqa: F722
-    colors: UInt8[torch.Tensor, "buffer_size num_patches 3"],  # noqa: F722
+    poses: Float32[torch.Tensor, "buffer_size 7"],
+    points: Float32[torch.Tensor, "buffer_size*num_patches 3"],
+    colors: UInt8[torch.Tensor, "buffer_size num_patches 3"],
     intri_np: Float64[np.ndarray, "4"],
-    bgr_hw3: UInt8[np.ndarray, "h w 3"],  # noqa: F722
+    bgr_hw3: UInt8[np.ndarray, "h w 3"],
     path_list: list,
     jpg_quality: int = 90,
 ):
@@ -54,6 +54,7 @@ def log_trajectory(
             width=bgr_hw3.shape[1],
             focal_length=[intri_np[0], intri_np[1]],
             principal_point=[intri_np[2], intri_np[3]],
+            image_plane_distance=1,
         ),
     )
 
